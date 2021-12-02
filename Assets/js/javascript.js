@@ -13,22 +13,41 @@ $(document).ready(function () {
             $("#heroInput").val("")
         };
 
+        let imagen;
+        let nombre;
+        let conexiones;
+        let publicado;
+        let ocupacion;
+        let pAparicion;
+        let altura; 
+        let peso;
+        let alianzas; 
+        let powerstats;
+
         $.ajax({
             type: "GET",
             dataType: "json",
             url: "https://superheroapi.com/api.php/10225031513557567/" + valueInput,
             success: function (data) {
-                let imagen = data.image.url;
-                let nombre = data.name;
-                let conexiones = data.connections["group-affiliation"];
-                let publicado = data.biography.publisher;
-                let ocupacion = data.work.occupation;
-                let pAparicion = data.biography["first-appearance"];
-                let altura = data.appearance.height;
-                let peso = data.appearance.weight;
-                let alianzas = data.biography.aliases;
 
-                $("#card").html(`
+                imagen = data.image.url;
+                nombre = data.name;
+                conexiones = data.connections["group-affiliation"];
+                publicado = data.biography.publisher;
+                ocupacion = data.work.occupation;
+                pAparicion = data.biography["first-appearance"];
+                altura = data.appearance.height;
+                peso = data.appearance.weight;
+                alianzas = data.biography.aliases;
+                powerstats = data.powerstats
+            },
+            error: function (data) {
+                console.log(data)
+            },
+            async: false,
+        });
+
+        $("#card").html(`
                     <div class="card mb-3 border-secondary">
                         <div class="row no-gutters">
                             <div class="col-12 col-sm-4">
@@ -61,10 +80,10 @@ $(document).ready(function () {
 
                 let estadisticas = [];
 
-                for (var key in data.powerstats) {
+                for (var key in powerstats) {
                     estadisticas.push({
                         label: key,
-                        y: parseInt(data.powerstats[key]),
+                        y: parseInt(powerstats[key]),
                     });
                 }
 
@@ -87,14 +106,6 @@ $(document).ready(function () {
                     }]
                 });
                 chart.render();
-            },
-
-            error: function (data) {
-                console.log(data)
-            },
-
-            async: true,
-        });
 
     });
 
